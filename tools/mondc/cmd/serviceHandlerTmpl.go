@@ -7,9 +7,9 @@ package handler
 
 import (
 	"context"
-	"meta/frame/logger"
-	"meta/service/{{.FolderPath}}/app"
-	"meta/service/{{.FolderPath}}/proto"
+	"mond/wind/logger"
+	"mond/service/{{.FolderPath}}/app"
+	"mond/service/{{.FolderPath}}/proto"
 )
 
 type {{.AppId}}Service struct {
@@ -34,8 +34,8 @@ package handler
 import (
 	"context"
 	"fmt"
-	"meta/frame"
-	"meta/service/{{.FolderPath}}/proto"
+	"mond/wind"
+	"mond/service/{{.FolderPath}}/proto"
 	"os"
 	"testing"
 )
@@ -47,7 +47,7 @@ var (
 func TestMain(m *testing.M) {
 	ctx = context.Background()
 	h := NewHook()
-	frame.InitFrame(h, frame.WithTestMode())
+	wind.InitFrame(h, wind.WithTestMode())
 	exitCode := m.Run()
 	os.Exit(exitCode)
 }
@@ -68,10 +68,10 @@ import (
 	"encoding/json"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	hook2 "meta/frame/hook"
-	"meta/frame/logger"
-	dynamicConfig "meta/service/{{.FolderPath}}/infra/config"
-	"meta/service/{{.FolderPath}}/proto"
+	hook2 "mond/wind/hook"
+	"mond/wind/logger"
+	dynamicConfig "mond/service/{{.FolderPath}}/infra/config"
+	"mond/service/{{.FolderPath}}/proto"
 )
 
 type hook struct {
@@ -131,9 +131,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/x/bsonx"
-	"meta/frame"
-	"meta/service/{{.FolderPath}}/app"
-	"meta/service/{{.FolderPath}}/domain/demo"
+	"mond/wind"
+	"mond/service/{{.FolderPath}}/app"
+	"mond/service/{{.FolderPath}}/domain/demo"
 	"sync"
 	"time"
 )
@@ -149,12 +149,12 @@ func (m *{{.AppId}}Service) ResourceInit(ctx context.Context) error {
 	if resourceInit {
 		panic("ResourceInit已经执行过了")
 	}
-	rdb, err := frame.GetRedisDbManager().GetClient("master")
+	rdb, err := wind.GetRedisDbManager().GetClient("master")
 	if err != nil {
 		return err
 	}
 
-	dbm := frame.GetMongoDbManager()
+	dbm := wind.GetMongoDbManager()
 	opts := options.CreateIndexes().SetMaxTime(10 * time.Second)
 
 	demoColl, err := dbm.GetCollection("master.meta.demo")

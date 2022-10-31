@@ -6,12 +6,12 @@ var cmdTemplate, _ = template.New("").Parse(`
 package main
 
 import (
-	"meta/frame"
-	"meta/service/{{.FolderPath}}/handler"
+	"mond/wind"
+	"mond/service/{{.FolderPath}}/handler"
 )
 
 func main() {
-	frame.InitFrame(handler.NewHook())
+	wind.InitFrame(handler.NewHook())
 }
 
 `)

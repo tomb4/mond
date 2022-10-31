@@ -7,8 +7,8 @@ package demo
 
 import (
 	"go.mongodb.org/mongo-driver/bson"
-	mongodb "meta/frame/db/mongo"
-	merr "meta/frame/err"
+	mongodb "mond/wind/db/mongo"
+	merr "mond/wind/err"
 )
 
 type Demo struct {
@@ -73,8 +73,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	mongodb "meta/frame/db/mongo"
-	merr "meta/frame/err"
+	mongodb "mond/wind/db/mongo"
+	merr "mond/wind/err"
 )
 
 type repository struct {
@@ -181,8 +181,8 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	mredis "meta/frame/cache/redis"
-	mongodb "meta/frame/db/mongo"
+	mredis "mond/wind/cache/redis"
+	mongodb "mond/wind/db/mongo"
 )
 
 type Service struct {
