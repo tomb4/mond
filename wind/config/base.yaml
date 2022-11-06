@@ -1,0 +1,8 @@
+
+
+base:
+  NamespaceId: "3b1f52e5-143d-4422-9b37-50148201bf32"
+  ServerIp: "127.0.0.1"
+base_develop:
+  NamespaceId: "3b1f52e5-143d-4422-9b37-50148201bf32"
+  ServerIp: "127.0.0.1"

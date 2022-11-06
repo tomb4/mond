@@ -1,0 +1,22 @@
+sentinel:
+  breaker:
+    "server.grpc":
+      RetryTimeoutMs: 10000
+      MinRequestAmount: 100
+      StatIntervalMs: 10000
+      StatSlidingWindowBucketCount: 10
+      ErrRatioThreshold: 0.7
+    "client.grpc":
+      RetryTimeoutMs: 10000
+      MinRequestAmount: 100
+      StatIntervalMs: 10000
+      StatSlidingWindowBucketCount: 10
+      ErrRatioThreshold: 0.7
+    "mongo":
+      RetryTimeoutMs: 10000
+      MinRequestAmount: 20
+      StatIntervalMs: 10000
+      StatSlidingWindowBucketCount: 10
+      SlowRatioThreshold: 0.7
+      MaxAllowedRtMs: 990
+      ErrCountThreshold: 20

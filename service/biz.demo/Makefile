@@ -1,9 +1,10 @@
 
 proto:
-	protoc -Iproto/ -I./../../../ --go_out=plugins=grpc:proto proto/Bizdemo.proto
-	protoc -Iproto/ -I./../../../ --meta_out=plugins=meta:proto proto/Bizdemo.proto
+	protoc --go_out=./ --go_opt=paths=source_relative --go-grpc_out=./ --go-grpc_opt=paths=source_relative proto/Bizdemo.proto
+	protoc --mond_out=./ --mond_opt=paths=source_relative  proto/Bizdemo.proto
 run:
 	go run cmd/server.go
+
 server:
 	go build -o 'bin/server'  ./cmd/server.go
 

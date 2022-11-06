@@ -69,17 +69,39 @@ func (p *MondPlugin) genClient(gf *protogen.GeneratedFile, svc *protogen.Service
 	gf.P(fmt.Sprintf(`func (m *grpc%sServiceClient) Close() error {
 	return m.conn.Close()
 }`, serviceName))
+
 	upper := fmt.Sprintf(`
-	func GetGrpc%sServiceClient() (Grpc%sServiceClient, error){
-		conn, err := mgrpc.MakeConn("%s")
-		if err != nil {
-			return nil, err
-		}
-		client := New%sServiceClient(conn)
-		return &grpc%sServiceClient{client: client, conn: conn},nil
+func GetGrpc%sServiceClient() (Grpc%sServiceClient, error){
+	if env.GetAppState() != env.Starting {
+		return nil, errors.New("必须在服务初始化时加载grpc client")
 	}
-	`, serviceName, serviceName, serviceName, serviceName, serviceName)
+	opt := config.GetGrpcClientOption("%s")
+	target := "meta://%s"
+	loadBalancingPolicy := "meta"
+	if opt.Scheme == "DNS" {
+	target = opt.Endpoint
+	loadBalancingPolicy = "round_robin"
+}
+	options := []grpc.DialOption{
+	grpc.WithTransportCredentials(insecure.NewCredentials()),
+`, serviceName, serviceName, serviceName, serviceName)
 	gf.P(upper)
+	gf.P("grpc.WithDefaultServiceConfig(fmt.Sprintf(`" + `{"loadBalancingPolicy":"%s"}` + "`, loadBalancingPolicy)),")
+	lower := fmt.Sprintf(`
+	grpc.WithChainUnaryInterceptor(mgrpc.ClientMiddleware(opt)...),
+}
+for _, v := range mgrpc.DefaultDialOptions {
+	options = append(options, v)
+}
+conn, err := grpc.Dial(target, options...)
+	if err != nil {
+		return nil, err
+	}
+	client := New%sServiceClient(conn)
+	return &grpc%sServiceClient{client: client, conn: conn},nil
+}
+`, serviceName, serviceName)
+	gf.P(lower)
 }
 
 func (p *MondPlugin) genServer(gf *protogen.GeneratedFile, svc *protogen.Service) {
@@ -112,10 +134,18 @@ func (p *MondPlugin) genImport(gf *protogen.GeneratedFile, f *protogen.File) {
 	gf.P()
 	gf.P("import (")
 	gf.P(`"context"`)
-	gf.P(`"google.golang.org/grpc"`)
+	gf.P(`"errors"`)
+	gf.P(`"fmt"`)
+	gf.P()
 	gf.P(`merr "mond/wind/err"`)
 	gf.P(`mgrpc "mond/wind/grpc"`)
+	gf.P(`"mond/wind/config"`)
+	gf.P(`"mond/wind/env"`)
+	gf.P()
+	gf.P(`"google.golang.org/grpc"`)
+	gf.P(`"google.golang.org/grpc/credentials/insecure"`)
 	gf.P(")")
+	gf.P()
 	gf.P(`var (
 		_ merr.ErrorCode
 	)`)

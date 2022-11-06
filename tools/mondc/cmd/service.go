@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 
 	"mond/wind/utils"
@@ -27,8 +28,8 @@ var (
 
 const (
 	configYamlStr = `
-	appId: %s
-	port: %d
+appId: %s
+port: %d
 	`
 )
 
@@ -192,10 +193,10 @@ var serviceCmd = &cobra.Command{
 		//formatAndWrite(f, buffer.Bytes())
 		buffer.Reset()
 
-		// err = os.Chdir(folderPath)
-		// utils.MustNil(err)
-		// c := exec.Command("make", "proto")
-		// err = c.Run()
-		// utils.MustNil(err)
+		err = os.Chdir(folderPath)
+		utils.MustNil(err)
+		c := exec.Command("make", "proto")
+		err = c.Run()
+		utils.MustNil(err)
 	},
 }
